@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Dictionary",
+  "version": "1.0",
+  "description": "Give meaning to words considering the context of the sentence.",
+
+  "icons": {
+    "48": "icons/image.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage" 
+  ],
+
+  "background": {
+    "scripts": ["dictionary.js"]  
+  },
+
+  "browser_action": {
+    "default_popup": "popup.html",  
+    "default_icon": "icons/image.png"
+  }
+}
