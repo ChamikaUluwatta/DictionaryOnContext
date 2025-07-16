@@ -12,7 +12,7 @@ function showCustomPopup(text) {
   popup.id = "custom-dictionary-popup";
   popup.innerHTML = `
     <div style="
-      position: fixed;
+      position: absolute;
       top: ${window.scrollY + 100}px;
       left: 50%;
       transform: translateX(-50%);
@@ -50,24 +50,41 @@ function showCustomPopup(text) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "gemma3:1b",
-          prompt: `Define "${word}" in this context: "${sentence}". Respond concisely.`,
-          stream: false,
+          prompt: `Define "${word}" in this context: "${sentence}". Be concise.`,
+          stream: true,
         }),
       });
-      const data = await response.json();
-      return data.response.trim();
+
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = "";
+      const popup = document.getElementById("custom-dictionary-popup");
+      popup.querySelector("p").innerHTML = `
+        <strong>${word}:</strong> <span style="color: gray;">Loading...</span>
+      `;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        fullResponse += JSON.parse(chunk).response || "";
+        popup.querySelector("p").innerHTML = `
+          <strong>${word}:</strong> ${fullResponse}
+        `;
+      }
+
+      return fullResponse;
     } catch (error) {
-      console.error("Ollama API error:", error);
-      return "Failed to fetch definition.";
+      console.error("Streaming error:", error);
+      return `Error: ${error.message}`;
     }
   }
   const onclickHandler = async (e) => {
-    console.log("Clicked on:", e.target);
     if (e.target.tagName === "SPAN") {
-      const definition = await fetchDefinition(e.target.textContent, text);
-      popup.querySelector("p").innerHTML = `
-        <strong>${e.target.textContent}:</strong> ${definition}
-      `;
+      const word = e.target.textContent;
+      await fetchDefinition(word, text);
     }
   };
   popup.addEventListener("click", onclickHandler);
