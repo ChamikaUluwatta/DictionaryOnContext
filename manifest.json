@@ -3,7 +3,11 @@
   "name": "Dictionary",
   "version": "1.0",
   "description": "Give meaning to words considering the context of the sentence.",
-
+  "applications": {
+    "gecko": {
+      "id": "u.chamikao2001@gmail.com"
+    }
+  },
   "icons": {
     "48": "icons/image.png"
   },
@@ -11,7 +15,6 @@
   "permissions": [
     "activeTab",
     "contextMenus",
-    "storage",
     "http://localhost/*"  
   ],
 

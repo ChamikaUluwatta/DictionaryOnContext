@@ -61,13 +61,13 @@ function showCustomPopup(text) {
       const decoder = new TextDecoder();
       let fullResponse = "";
       const popup = document.getElementById("custom-dictionary-popup");
+      console.log(popup.innerHTML);
       popup.querySelector("p").innerHTML = `
         <strong>${word}:</strong> <span style="color: gray;">Loading...</span>
       `;
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         const chunk = decoder.decode(value);
         fullResponse += JSON.parse(chunk).response || "";
         popup.querySelector("p").innerHTML = `
