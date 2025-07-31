@@ -3,13 +3,16 @@
   "name": "Dictionary",
   "version": "1.0",
   "description": "Give meaning to words considering the context of the sentence.",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
-      "id": "u.chamikao2001@gmail.com"
+      "id": "u.chamikao2001@gmail.com",
+      "strict_min_version": "60.0"
     }
   },
   "icons": {
-    "48": "icons/image.png"
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+    
   },
 
   "permissions": [
