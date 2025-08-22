@@ -1,4 +1,4 @@
-# Dictionary with Ollama
+# DictionaryOnContext
 
 [![Firefox Add-on](https://img.shields.io/amo/v/dictionarywithollama?label=Firefox%20Add-on)](https://addons.mozilla.org/en-US/firefox/addon/dictionarywithollama/)
 
