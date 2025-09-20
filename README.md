@@ -1,6 +1,5 @@
 # DictionaryOnContext
 
-[![Firefox Add-on](https://img.shields.io/amo/v/dictionarywithollama?label=Firefox%20Add-on)](https://addons.mozilla.org/en-US/firefox/addon/dictionarywithollama/)
 
 ##  Overview
 **DictionaryOnContext** is a Firefox extension that helps you quickly understand the meaning of words in context.  
@@ -12,7 +11,7 @@ Unlike traditional dictionaries, this extension considers the **entire sentence*
 - Lightweight and simple to use.  
 - Works on all websites you visit.  
 
-## 🛠 Installation
+## Installation
 You can install it directly from the Firefox Add-ons Store:
 
  [Dictionary with Ollama – Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/dictionarywithollama/)
