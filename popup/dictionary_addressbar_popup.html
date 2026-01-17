@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    
+    body.light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+    body.light-mode h3 {
+      color: #000000;
+    }
+    
+    body.light-mode input[type="text"],
+    body.light-mode select,
+    body.light-mode textarea {
+      background-color: #f5f5f5;
+      color: #000000;
+      border-color: #ccc;
+    }
+    
+    body.light-mode .back-button {
+      color: #000000;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    h3 {
+      margin: 0;
+      color: #ffffff;
+    }
+    
+    .settings-icon {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s, filter 0.3s;
+      filter: brightness(0) invert(1);
+    }
+    
+    .settings-icon:hover {
+      opacity: 1;
+    }
+    
+    body.light-mode .settings-icon {
+      filter: brightness(0);
+    }
+    
+    .back-button {
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    
+    .back-button:hover {
+      opacity: 1;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .settings-view {
+      margin-top: 10px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #2d2d2d;
+      color: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    select:focus {
+      outline: none;
+      border-color: #0078d4;
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: #2d2d2d;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      resize: none;
+      overflow-y: auto;
+      min-height: 36px;
+      max-height: 150px;
+      transition: height 0.2s;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #0078d4;
+    }
+    
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    button:hover {
+      background-color: #005a9e;
+    }
+    
+    button:active {
+      background-color: #004578;
+    }
+    
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      margin-top: 15px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background-color: #444;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .toggle-switch.active {
+      background-color: #0078d4;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    
+    .toggle-switch.active .toggle-slider {
+      transform: translateX(26px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="back-button hidden" id="backButton">← Back</span>
+    <h3 id="headerTitle">Dictionary Lookup</h3>
+    <img src="settings.svg" alt="Settings" class="settings-icon" id="settingsIcon">
+  </div>
+  
+  <!-- Main View -->
+  <div id="mainView">
+    <textarea id="textInput" placeholder="Enter text to lookup..." rows="1"></textarea>
+    <button id="translateBtn">Translate</button>
+  </div>
+  
+  <!-- Settings View -->
+  <div id="settingsView" class="settings-view hidden">
+    <label for="modelSelect">Select Ollama Model:</label>
+    <select id="modelSelect">
+      <option value="">Loading models...</option>
+    </select>
+    
+    <div class="theme-toggle">
+      <label for="themeToggle" style="margin: 0;">Dark Mode</label>
+      <div class="toggle-switch" id="themeToggle">
+        <div class="toggle-slider"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
