@@ -74,17 +74,30 @@ class CustomDictionaryPopup {
       : 'none';
   }
 
-  formatModelResponse(text) {
-    const escaped = text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  renderFormattedResponse(targetNode, text) {
+    while (targetNode.firstChild) {
+      targetNode.removeChild(targetNode.firstChild);
+    }
 
-    return escaped
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>');
+    const lines = text.split('\n');
+
+    lines.forEach((line, lineIndex) => {
+      const parts = line.split(/(\*\*.+?\*\*)/g);
+
+      parts.forEach((part) => {
+        if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+          const strong = document.createElement('strong');
+          strong.textContent = part.slice(2, -2);
+          targetNode.appendChild(strong);
+        } else if (part) {
+          targetNode.appendChild(document.createTextNode(part));
+        }
+      });
+
+      if (lineIndex < lines.length - 1) {
+        targetNode.appendChild(document.createElement('br'));
+      }
+    });
   }
 
   async show(text) {
@@ -533,7 +546,7 @@ class CustomDictionaryPopup {
       loadingSpan.style.cssText = `
         color: ${this.theme.onSurfaceMuted};
       `;
-      loadingSpan.innerHTML = 'Loading...';
+      loadingSpan.textContent = 'Loading...';
       this.contentPara.appendChild(loadingSpan);
 
       while (true) {
@@ -561,14 +574,14 @@ class CustomDictionaryPopup {
         });
 
         loadingSpan.style.color = this.theme.onSurface;
-        loadingSpan.innerHTML = this.formatModelResponse(fullResponse);
+        this.renderFormattedResponse(loadingSpan, fullResponse);
       }
 
       if (buffered.trim()) {
         try {
           const parsed = JSON.parse(buffered.trim());
           fullResponse += parsed.response || '';
-          loadingSpan.innerHTML = this.formatModelResponse(fullResponse);
+          this.renderFormattedResponse(loadingSpan, fullResponse);
         } catch (e) {
           console.error('Trailing JSON parse error:', e, buffered);
         }

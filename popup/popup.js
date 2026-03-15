@@ -1,18 +1,46 @@
-document.getElementById('translateBtn').addEventListener('click', () => {
-  const text = document.getElementById('textInput').value.trim();
-  
-  if (text) {
-    // Send message to the active tab to show the dictionary popup
-    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-      browser.tabs.sendMessage(tabs[0].id, {
-        action: "showPopup",
-        text: text
-      });
-      // Close the popup after sending the message
-      window.close();
+const translateBtn = document.getElementById('translateBtn');
+
+async function showPopupInActiveTab(text) {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+
+  if (!tabs || tabs.length === 0 || !tabs[0].id) {
+    throw new Error('No active tab found.');
+  }
+
+  const activeTab = tabs[0];
+
+  try {
+    await browser.tabs.sendMessage(activeTab.id, {
+      action: 'showPopup',
+      text,
     });
-  } else {
+    return;
+  } catch (sendError) {
+    // On restricted/late-loading pages, ensure the content script is present then retry.
+    await browser.tabs.executeScript(activeTab.id, { file: 'dictionary.js' });
+    await browser.tabs.sendMessage(activeTab.id, {
+      action: 'showPopup',
+      text,
+    });
+  }
+}
+
+translateBtn.addEventListener('click', async () => {
+  const text = document.getElementById('textInput').value.trim();
+
+  if (!text) {
     window.close();
+    return;
+  }
+
+  translateBtn.disabled = true;
+
+  try {
+    await showPopupInActiveTab(text);
+    window.close();
+  } catch (error) {
+    console.error('Failed to show dictionary popup:', error);
+    translateBtn.disabled = false;
   }
 });
 
