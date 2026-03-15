@@ -491,15 +491,20 @@ class CustomDictionaryPopup {
       this.showLoadingAnimation();
 
       const storage = await browser.storage.local.get('selectedModel');
-      const modelName = storage.selectedModel || "qwen2.5:3b-instruct"; // Default fallback
+      const modelName = storage.selectedModel;
 
-      const response = await fetch("http://localhost:11434/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      if (!modelName) {
+        throw new Error('No model selected. Please select a model in the extension settings.');
+      }
+
+      const response = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: modelName,
           prompt: `Define "${word}" in: "${sentence}". Be concise.`,
           stream: true,
+          think: false,
         }),
       });
 
