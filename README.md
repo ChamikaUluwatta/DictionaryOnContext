@@ -8,11 +8,7 @@ Unlike traditional dictionaries, this extension considers the **entire sentence*
 ##  Features
 - **Context-aware definitions** – Considers the full sentence for more accurate meanings
 - **Single & Multiple word selection modes** – Choose one word or multiple consecutive words
-- **Dark/Light theme** – Switch between dark and light modes for comfortable viewing
 - **Customizable AI model** – Select your preferred Ollama model from settings
-- **Address bar popup** – Quick access to lookup any text directly
-- **Right-click context menu** – Instantly look up selected text on any webpage
-- **Back navigation** – Return to word selection after viewing definitions
 - **Lightweight and fast** – Works seamlessly on all websites
 
 ## Installation
