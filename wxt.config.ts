@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   }),
   manifest: {
-    permissions: ["storage"],
+    permissions: ["storage","contextMenus","scripting"],
     host_permissions:  ["https://generativelanguage.googleapis.com/*"],
   },
 });
