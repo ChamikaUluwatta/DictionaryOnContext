@@ -1,6 +1,6 @@
 import { useState } from "react";
 import InputView from "@/components/Inputview/InputView";
-import { OutputView } from "@/components/outputview/OutputView";
+import OutputView from "@/components/outputview/OutputView";
 import Settings from "@/components/setting/Settings";
 import { useTranslation } from "@/hooks/useTranslation";
 import SelectTextView from "@/components/selectTextView/SelectTestView";

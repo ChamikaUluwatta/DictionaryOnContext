@@ -4,7 +4,7 @@ type OutputViewProps = {
   isStreaming: boolean;
 };
 
-export function OutputView({ text, error, isStreaming }: OutputViewProps) {
+export default function OutputView({ text, error, isStreaming }: OutputViewProps) {
   if (error) {
     return (
       <div className="bg-[#f0e6d3] rounded-xl p-4 mt-3 mx-1 border border-[#e07a5f]/30">
