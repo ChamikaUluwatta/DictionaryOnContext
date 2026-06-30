@@ -29,7 +29,7 @@ export default function SelectTextView({ text, onTranslate }: Props) {
             onClick={() =>
               setSelectedIndex(i === selectedIndex ? null : i)
             }
-            className={`text-sm rounded-sm p-1 cursor-pointer whitespace-nowrap transition-colors ${
+            className={`text-sm rounded-sm p-1 cursor-pointer break-all transition-colors ${
               i === selectedIndex
                 ? "bg-[#81b29a] text-[#fdf6ec]"
                 : "text-[#3d405b] hover:bg-[#81b29a]/20"

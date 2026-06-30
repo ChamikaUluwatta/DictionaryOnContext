@@ -1,8 +1,9 @@
-import { createRoot, Root } from "react-dom/client";
-import SelectTextView from "@/components/selectTextView/SelectTestView";
+import ReactDOM, { Root } from "react-dom/client";
+import "./tailwind.css";
 import { AbsolutePopUp } from "@/components/AbsolutePopUp/AbsolutePopUp";
 export default defineContentScript({
   matches: ["<all_urls>"],
+  cssInjectionMode: "ui",
   async main(ctx) {
     let uiInstance: any = null;
     let reactRoot: Root | null = null;
@@ -36,11 +37,11 @@ export default defineContentScript({
               container.style.alignItems = "center";
               container.style.justifyContent = "center";
               container.style.zIndex = "999999";
-              // container.style.background = "rgba(0,0,0,0.15)";
 
-              reactRoot = createRoot(container);
-              reactRoot.render(<AbsolutePopUp text={currentText} />);
-            },
+              const root = ReactDOM.createRoot(container);
+              reactRoot = root;
+              root.render(<AbsolutePopUp text={currentText} onClose={handleClose} />);
+            }
           });
           uiInstance.mount();
         }
