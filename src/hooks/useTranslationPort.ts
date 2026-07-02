@@ -1,9 +1,15 @@
 import { useCallback, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
+export type SettingsData = {
+  provider: string;
+  apiKey: string;
+  model: string;
+};
+
 type Status = "idle" | "loading" | "streaming" | "done" | "error";
 
-export function useTranslationPort() {
+export function useTranslationPort(settings: SettingsData) {
   const [status, setStatus] = useState<Status>("idle");
   const [outputText, setOutputText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -13,12 +19,11 @@ export function useTranslationPort() {
     if (!text.trim()) return;
 
     abort();
-
     setStatus("loading");
     setOutputText("");
     setError(null);
 
-    const port = browser.runtime.connect({ name: "gemini-translate" });
+    const port = browser.runtime.connect({ name: "translate" });
     portRef.current = port;
 
     port.onMessage.addListener(
@@ -46,8 +51,8 @@ export function useTranslationPort() {
       setStatus((prev) => (prev === "streaming" ? "done" : prev));
     });
 
-    port.postMessage({ text });
-  }, []);
+    port.postMessage({ text, provider: settings.provider, apiKey: settings.apiKey, model: settings.model });
+  }, [settings]);
 
   const abort = useCallback(() => {
     if (portRef.current) {

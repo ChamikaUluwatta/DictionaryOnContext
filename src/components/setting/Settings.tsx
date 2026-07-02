@@ -1,26 +1,14 @@
-
-type SettingsData = {
-  provider: string;
-  apiKey: string;
-  model: string;
-};
+import type { SettingsData } from "@/hooks/useTranslationPort";
+import { SaveIcon } from "@/components/icons";
+import { PROVIDERS, MODELS_BY_PROVIDER } from "@/utils/constants";
 
 type SettingsProps = {
   value: SettingsData;
   onChange: (settings: SettingsData) => void;
+  saveApiKey: ()=>void
 };
 
-const PROVIDERS = ["gemini"] as const;
-
-const MODELS_BY_PROVIDER: Record<string, string[]> = {
-  gemini: [
-    "gemini-3-flash-preview",
-    "gemini-2.5-flash",
-    "gemini-2.5-pro",
-  ],
-};
-
-export default function Settings({ value, onChange }: SettingsProps) {
+export default function Settings({ value, onChange, saveApiKey }: SettingsProps) {
   const models = MODELS_BY_PROVIDER[value.provider] ?? [];
 
   const update = (patch: Partial<SettingsData>) => {
@@ -39,12 +27,16 @@ export default function Settings({ value, onChange }: SettingsProps) {
           </label>
           <select
             value={value.provider}
-            onChange={(e) => update({ provider: e.target.value, model: "" })}
+            onChange={(e) => {
+              const newProvider = e.target.value;
+              const firstModel = MODELS_BY_PROVIDER[newProvider]?.[0] ?? "";
+              update({ provider: newProvider, model: firstModel });
+            }}
             className="w-full bg-[#fdf6ec] text-[#3d405b] rounded-lg px-3 py-2 text-[14px] outline-none border border-[#3d405b]/10 cursor-pointer"
           >
             {PROVIDERS.map((p) => (
               <option key={p} value={p}>
-                {p === "gemini" ? "Google Gemini" : p}
+                {p === "gemini" ? "Google Gemini" : p === "openrouter" ? "Openrouter" : p}
               </option>
             ))}
           </select>
@@ -78,6 +70,12 @@ export default function Settings({ value, onChange }: SettingsProps) {
             ))}
           </select>
         </div>
+      </div>
+      <div className="flex flex-row justify-end mt-4">
+        <button onClick={saveApiKey} className="flex items-center gap-1.5 bg-[#81b29a] text-[#fdf6ec] rounded-lg px-3 py-1.5 text-[13px] cursor-pointer hover:bg-[#6b9a85] transition-colors">
+          <SaveIcon />
+          Save
+        </button>
       </div>
     </div>
   );

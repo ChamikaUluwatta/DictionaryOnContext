@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-import { ArrowUpIcon, LoadingSpinner, SettingsIcon } from "@/lib/icons";
+import { ArrowUpIcon, LoadingSpinner, SettingsIcon } from "@/components/icons";
 
 const MIN_HEIGHT = 44;
 const MAX_HEIGHT = 160;
@@ -56,7 +56,7 @@ export default function InputView({
 
   return (
     <div className="w-full min-w-[320px]">
-      <div className="bg-[#f0e6d3] rounded-t-3xl px-3.5 py-2.5 flex items-center gap-2.5 relative">
+      <div className="bg-[#f0e6d3] rounded-3xl px-3.5 py-2.5 flex items-center gap-2.5">
         <textarea
           ref={textareaRef}
           value={inputValue}
@@ -77,8 +77,6 @@ export default function InputView({
           "
           style={{ height: `${MIN_HEIGHT}px` }}
         />
-      </div>
-      <div className="flex rounded-b-3xl flex-row justify-end gap-2 bg-[#f0e6d3] outline-none p-3">
         <button
           type="button"
           onClick={onToggleSettings}
@@ -87,7 +85,6 @@ export default function InputView({
         >
           <SettingsIcon open={showSettings} />
         </button>
-
         <button
           onClick={onSend}
           disabled={isEmpty || isLoading}

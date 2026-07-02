@@ -1,22 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputView from "@/components/Inputview/InputView";
 import OutputView from "@/components/outputview/OutputView";
 import Settings from "@/components/setting/Settings";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useTranslationPort, type SettingsData } from "@/hooks/useTranslationPort";
 import SelectTextView from "@/components/selectTextView/SelectTestView";
-
-const DEFAULT_SETTINGS = {
-  provider: "gemini",
-  apiKey: "",
-  model: "gemini-3-flash-preview",
-};
+import { settingsItem } from "@/utils/storage";
+import { DEFAULT_SETTINGS } from "@/utils/constants";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [showSettings, setShowSettings] = useState(false);
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS);
   const [showSelectedView, setShowSelectedView] = useState(false);
-  const { status, outputText, error, translate, abort  } = useTranslation();
+  const { status, outputText, error, translate, abort } = useTranslationPort(settings);
+
+  const saveApiKey = () => {
+    settingsItem.setValue(settings);
+    setShowSettings(false);
+  };
+
+  useEffect(() => {
+    settingsItem.getValue().then((saved) => {
+      if (saved) setSettings(saved);
+    });
+  }, []);
+
 
   const isLoading = status === "loading" || status === "streaming";
   const showOutput =
@@ -24,9 +32,9 @@ function App() {
 
   const handleSend = () => {
     if (!inputValue.trim() || isLoading) return;
-    abort()
-    setShowSettings(false)
-    setShowSelectedView(true)
+    abort();
+    setShowSettings(false);
+    setShowSelectedView(true);
   };
 
   const handleSelected = (selectedText: string) => {
@@ -44,7 +52,7 @@ function App() {
         showSettings={showSettings}
         onToggleSettings={() => setShowSettings((prev) => !prev)}
       />
-      {showSettings && <Settings value={settings} onChange={setSettings} />}
+      {showSettings && <Settings value={settings} onChange={setSettings} saveApiKey={saveApiKey} />}
       {showOutput && (
         <OutputView
           text={outputText}

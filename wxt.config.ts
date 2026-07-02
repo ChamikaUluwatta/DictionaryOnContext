@@ -10,6 +10,6 @@ export default defineConfig({
   }),
   manifest: {
     permissions: ["storage","contextMenus","scripting"],
-    host_permissions:  ["https://generativelanguage.googleapis.com/*"],
+    host_permissions:  ["https://generativelanguage.googleapis.com/*", "https://openrouter.ai/*"],
   },
 });
