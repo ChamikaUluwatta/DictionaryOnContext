@@ -5,7 +5,7 @@ export default defineContentScript({
   matches: ["<all_urls>"],
   cssInjectionMode: "ui",
   async main(ctx) {
-    let uiInstance: any = null;
+    let uiInstance: ShadowRootContentScriptUi<void> | null = null;
     let reactRoot: Root | null = null;
     let currentText = "";
 
@@ -36,14 +36,22 @@ export default defineContentScript({
               container.style.display = "flex";
               container.style.alignItems = "center";
               container.style.justifyContent = "center";
-              container.style.zIndex = "999999";
 
               const root = ReactDOM.createRoot(container);
               reactRoot = root;
-              root.render(<AbsolutePopUp text={currentText} onClose={handleClose} />);
-            }
+              root.render(
+                <AbsolutePopUp text={currentText} onClose={handleClose} />,
+              );
+            },
           });
           uiInstance.mount();
+          const host = uiInstance.shadowHost;
+          if (host instanceof HTMLElement) {
+            host.style.zIndex = "2147483647";
+            host.style.position = "fixed";
+            host.style.inset = "0";
+            host.style.pointerEvents = "none";
+          }
         }
       }
     });
