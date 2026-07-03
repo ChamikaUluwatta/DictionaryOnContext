@@ -47,9 +47,13 @@ export default function Settings({ value, onChange, saveApiKey }: SettingsProps)
           </label>
           <input
             type="password"
-            value={value.apiKey}
-            onChange={(e) => update({ apiKey: e.target.value })}
-            placeholder="Enter your API key"
+            value={value.apiKeys[value.provider] ?? ""}
+            onChange={(e) =>
+              update({
+                apiKeys: { ...value.apiKeys, [value.provider]: e.target.value },
+              })
+            }
+            placeholder={`Enter your ${value.provider === "gemini" ? "Gemini" : "OpenRouter"} API key`}
             className="w-full bg-[#fdf6ec] text-[#3d405b] rounded-lg px-3 py-2 text-[14px] outline-none border border-[#3d405b]/10"
           />
         </div>

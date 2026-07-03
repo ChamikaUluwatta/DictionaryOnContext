@@ -3,7 +3,7 @@ import { flushSync } from "react-dom";
 
 export type SettingsData = {
   provider: string;
-  apiKey: string;
+  apiKeys: Record<string, string>;
   model: string;
 };
 
@@ -15,44 +15,52 @@ export function useTranslationPort(settings: SettingsData) {
   const [error, setError] = useState<string | null>(null);
   const portRef = useRef<Browser.runtime.Port | null>(null);
 
-  const translate = useCallback(async (text: string) => {
-    if (!text.trim()) return;
+  const translate = useCallback(
+    async (text: string) => {
+      if (!text.trim()) return;
 
-    abort();
-    setStatus("loading");
-    setOutputText("");
-    setError(null);
+      abort();
+      setStatus("loading");
+      setOutputText("");
+      setError(null);
 
-    const port = browser.runtime.connect({ name: "translate" });
-    portRef.current = port;
+      const port = browser.runtime.connect({ name: "translate" });
+      portRef.current = port;
 
-    port.onMessage.addListener(
-      (msg: { type: string; text?: string; message?: string }) => {
-        if (msg.type === "delta") {
-          flushSync(() => {
-            setStatus("streaming");
-            setOutputText((prev) => prev + (msg.text ?? ""));
-          });
-        } else if (msg.type === "done") {
-          flushSync(() => {
-            setStatus("done");
-          });
-        } else if (msg.type === "error") {
-          flushSync(() => {
-            setStatus("error");
-            setError(msg.message ?? "Unknown error");
-          });
-        }
-      },
-    );
+      port.onMessage.addListener(
+        (msg: { type: string; text?: string; message?: string }) => {
+          if (msg.type === "delta") {
+            flushSync(() => {
+              setStatus("streaming");
+              setOutputText((prev) => prev + (msg.text ?? ""));
+            });
+          } else if (msg.type === "done") {
+            flushSync(() => {
+              setStatus("done");
+            });
+          } else if (msg.type === "error") {
+            flushSync(() => {
+              setStatus("error");
+              setError(msg.message ?? "Unknown error");
+            });
+          }
+        },
+      );
 
-    port.onDisconnect.addListener(() => {
-      portRef.current = null;
-      setStatus((prev) => (prev === "streaming" ? "done" : prev));
-    });
+      port.onDisconnect.addListener(() => {
+        portRef.current = null;
+        setStatus((prev) => (prev === "streaming" ? "done" : prev));
+      });
 
-    port.postMessage({ text, provider: settings.provider, apiKey: settings.apiKey, model: settings.model });
-  }, [settings]);
+      port.postMessage({
+        text,
+        provider: settings.provider,
+        apiKey: settings.apiKeys[settings.provider] ?? "",
+        model: settings.model,
+      });
+    },
+    [settings],
+  );
 
   const abort = useCallback(() => {
     if (portRef.current) {

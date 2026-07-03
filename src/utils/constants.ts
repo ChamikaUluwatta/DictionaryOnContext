@@ -15,7 +15,7 @@ export const MODELS_BY_PROVIDER: Record<string, string[]> = {
 
 export const DEFAULT_SETTINGS: SettingsData = {
   provider: "openrouter",
-  apiKey: "",
+  apiKeys: {},
   model: "openrouter/free",
 };
 

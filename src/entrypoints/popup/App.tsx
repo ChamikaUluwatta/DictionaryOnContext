@@ -21,7 +21,14 @@ function App() {
 
   useEffect(() => {
     settingsItem.getValue().then((saved) => {
-      if (saved) setSettings(saved);
+      if (saved) {
+        const v = saved as SettingsData & { apiKey?: string };
+        if (v.apiKey && !v.apiKeys) {
+          setSettings({ ...v, apiKeys: { [v.provider]: v.apiKey } });
+        } else {
+          setSettings(saved);
+        }
+      }
     });
   }, []);
 
